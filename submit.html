@@ -70,9 +70,9 @@ a{color:inherit;text-decoration:none}
 
 .form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
 
-/* Radio cards */
-.radio-group{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px}
-.radio-card{position:relative;display:flex;align-items:center;gap:10px;padding:14px 16px;border:1.5px solid var(--rule);border-radius:12px;cursor:pointer;transition:.2s;font-size:.92rem;font-weight:600}
+/* Radio chips */
+.radio-group{display:flex;flex-wrap:wrap;gap:10px}
+.radio-card{position:relative;display:inline-flex;align-items:center;gap:8px;padding:10px 20px;border:1.5px solid var(--rule);border-radius:30px;cursor:pointer;transition:.2s;font-size:.92rem;font-weight:600;white-space:nowrap}
 .radio-card:hover{border-color:var(--accent2)}
 .radio-card input{position:absolute;opacity:0;width:0;height:0}
 .radio-card .rc-dot{width:18px;height:18px;border-radius:50%;border:2px solid var(--rule);display:grid;place-items:center;flex-shrink:0;transition:.2s}
@@ -158,7 +158,7 @@ a{color:inherit;text-decoration:none}
 <div class="form-wrap" id="formArea">
   <div class="form-head">
     <h1>提交参赛作品</h1>
-    <p>请仔细填写以下参赛信息，确保与报名表信息一致。</p>
+    <p style="font-weight:700;color:var(--accent);font-size:1rem;background:rgba(200,54,42,.06);padding:10px 16px;border-radius:8px;border-left:4px solid var(--accent)">请仔细填写以下参赛信息，确保与报名表信息一致，信息错误将导致无效提交。</p>
     <div class="deadline-tag">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
       截止时间：2026.10.30 24:00
@@ -170,8 +170,6 @@ a{color:inherit;text-decoration:none}
     <!-- 参赛信息 -->
     <div class="form-section">
       <h2><span class="sn">A</span>参赛信息</h2>
-      <p class="sec-desc">请选择参赛赛区与组别，以下信息需与报名表一致。</p>
-
       <div class="form-field">
         <label>赛区 <span class="req">*</span></label>
         <div class="radio-group">
@@ -233,9 +231,6 @@ a{color:inherit;text-decoration:none}
     <!-- 指导老师 -->
     <div class="form-section">
       <h2><span class="sn">B</span>指导老师</h2>
-      <div class="field-note" style="margin-bottom:24px">
-        需与报名表中的信息、顺序一致，信息错误可能会导致无效提交
-      </div>
 
       <div class="form-row">
         <div class="form-field">
@@ -252,9 +247,6 @@ a{color:inherit;text-decoration:none}
     <!-- 参赛选手 -->
     <div class="form-section">
       <h2><span class="sn">C</span>参赛选手</h2>
-      <div class="field-note" style="margin-bottom:24px">
-        需与报名表中的信息、顺序一致，信息错误可能会导致无效提交
-      </div>
 
       <div class="form-row">
         <div class="form-field">
@@ -294,7 +286,7 @@ a{color:inherit;text-decoration:none}
         <div class="upload-zone" id="formUploadZone" onclick="document.getElementById('formFile').click()">
           <div class="uz-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg></div>
           <h4>点击或拖拽上传报名表</h4>
-          <p>需与报名表信息一致</p>
+          <p>请上传加盖公章的报名表</p>
           <div class="uz-formats">支持格式：JPG / PNG / PDF</div>
         </div>
         <input type="file" id="formFile" name="formFile" accept=".jpg,.jpeg,.png,.pdf,image/*,application/pdf" style="display:none" onchange="handleFileUpload(this,'formFiles')">
