@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>评审系统 | 第二届 AIGC 文创设计赛项</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --primary:#b83325;--primary-dark:#8b241a;--primary-light:#d94b3a;
+  --accent:#c8961e;--accent-dark:#a07710;
+  --bg:#f5f6f8;--surface:#fff;--surface-2:#fafbfc;
+  --text:#1a1a1a;--text-secondary:#6b7280;--text-muted:#9ca3af;
+  --border:#e5e7eb;--border-light:#f0f1f3;
+  --success:#10b981;--warning:#f59e0b;--danger:#ef4444;--info:#3b82f6;
+  --shadow-sm:0 1px 2px rgba(0,0,0,.04);--shadow:0 4px 12px rgba(0,0,0,.06);
+  --shadow-lg:0 10px 30px rgba(0,0,0,.1);
+  --radius:8px;--radius-lg:12px;
+  --sidebar-w:240px;--header-h:64px;
+}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.6}
+
+/* ===== Login ===== */
+.login-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#1a0a08 0%,#4a1810 50%,#1a0a08 100%);position:relative;overflow:hidden}
+.login-wrap::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 20% 30%,rgba(200,150,30,.15),transparent 50%),radial-gradient(circle at 80% 70%,rgba(184,51,37,.2),transparent 50%)}
+.login-card{position:relative;width:420px;background:rgba(255,255,255,.97);border-radius:16px;box-shadow:var(--shadow-lg);padding:48px 40px}
+.login-logo{text-align:center;margin-bottom:32px}
+.login-logo .brand-icon{width:56px;height:56px;background:linear-gradient(135deg,var(--primary),var(--accent));border-radius:14px;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:22px;font-weight:800;margin-bottom:16px}
+.login-logo h1{font-size:20px;font-weight:700;color:var(--text);margin-bottom:4px}
+.login-logo p{font-size:13px;color:var(--text-secondary)}
+.login-form .form-group{margin-bottom:18px}
+.login-form label{display:block;font-size:13px;font-weight:500;margin-bottom:8px}
+.login-form input{width:100%;height:44px;padding:0 14px;border:1px solid var(--border);border-radius:var(--radius);font-size:14px;transition:.2s}
+.login-form input:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px rgba(184,51,37,.1)}
+.login-form .submit-btn{width:100%;height:46px;background:linear-gradient(135deg,var(--primary),var(--primary-dark));color:#fff;border:none;border-radius:var(--radius);font-size:15px;font-weight:600;cursor:pointer;transition:.2s;margin-top:8px}
+.login-form .submit-btn:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(184,51,37,.3)}
+.login-error{color:var(--danger);font-size:13px;text-align:center;margin-top:12px;min-height:18px}
+.login-tip{text-align:center;font-size:12px;color:var(--text-muted);margin-top:20px;padding-top:20px;border-top:1px solid var(--border-light)}
+.login-tip .demo-accounts{display:flex;flex-direction:column;gap:6px;margin-top:10px}
+.login-tip .demo-account{display:flex;justify-content:space-between;padding:6px 12px;background:var(--surface-2);border-radius:6px;font-size:12px;cursor:pointer;transition:.2s}
+.login-tip .demo-account:hover{background:#fef3c7;color:var(--primary-dark)}
+.login-tip .demo-account .da-user{font-weight:600;color:var(--primary)}
+.login-tip .demo-account .da-name{color:var(--text-secondary)}
+
+/* ===== Layout ===== */
+.app{display:none}
+.app.active{display:flex;min-height:100vh}
+.sidebar{width:var(--sidebar-w);background:linear-gradient(180deg,#1a0f0d 0%,#2d1612 100%);color:#fff;position:fixed;top:0;left:0;bottom:0;z-index:100;display:flex;flex-direction:column}
+.sidebar-brand{height:var(--header-h);display:flex;align-items:center;gap:12px;padding:0 20px;border-bottom:1px solid rgba(255,255,255,.08)}
+.sidebar-brand .logo{width:36px;height:36px;background:linear-gradient(135deg,var(--primary),var(--accent));border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:16px}
+.sidebar-brand h2{font-size:15px;font-weight:700;line-height:1.3}
+.sidebar-brand h2 span{display:block;font-size:11px;color:var(--accent);font-weight:500;letter-spacing:.5px}
+.sidebar-nav{flex:1;padding:16px 12px;overflow-y:auto}
+.nav-group-title{font-size:11px;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:1px;padding:8px 12px;font-weight:600}
+.nav-item{display:flex;align-items:center;gap:12px;padding:10px 14px;border-radius:8px;color:rgba(255,255,255,.7);cursor:pointer;transition:.2s;font-size:14px;margin-bottom:2px}
+.nav-item:hover{background:rgba(255,255,255,.06);color:#fff}
+.nav-item.active{background:linear-gradient(135deg,rgba(184,51,37,.8),rgba(184,51,37,.5));color:#fff;font-weight:500;box-shadow:0 4px 12px rgba(184,51,37,.3)}
+.nav-item .icon{width:20px;height:20px;display:inline-flex;align-items:center;justify-content:center}
+.nav-item .badge{margin-left:auto;background:var(--accent);color:#1a0f0d;font-size:11px;font-weight:700;padding:2px 7px;border-radius:10px}
+.sidebar-footer{padding:16px;border-top:1px solid rgba(255,255,255,.08)}
+.judge-info{display:flex;align-items:center;gap:12px;padding:10px;border-radius:8px}
+.judge-avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent-dark));display:flex;align-items:center;justify-content:center;font-weight:700;color:#1a0f0d;font-size:14px}
+.judge-text .name{font-size:13px;font-weight:600}
+.judge-text .role{font-size:11px;color:rgba(255,255,255,.5)}
+.logout-btn{margin-top:10px;width:100%;padding:8px;border:1px solid rgba(255,255,255,.15);background:transparent;color:rgba(255,255,255,.7);border-radius:8px;font-size:13px;cursor:pointer;transition:.2s}
+.logout-btn:hover{background:rgba(255,255,255,.08);color:#fff}
+
+.main{margin-left:var(--sidebar-w);flex:1;min-width:0;display:flex;flex-direction:column}
+.header{height:var(--header-h);background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 32px;position:sticky;top:0;z-index:50}
+.header h1{font-size:18px;font-weight:700;flex:1}
+.header-deadline{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text-secondary)}
+.header-deadline .countdown{background:#fffbeb;color:var(--warning);padding:4px 12px;border-radius:6px;font-weight:600;font-size:12px}
+.content{padding:24px 32px;flex:1}
+
+/* ===== Common ===== */
+.btn{display:inline-flex;align-items:center;gap:6px;height:36px;padding:0 16px;border-radius:var(--radius);border:none;font-size:13px;font-weight:500;cursor:pointer;transition:.2s;white-space:nowrap}
+.btn-primary{background:var(--primary);color:#fff}
+.btn-primary:hover{background:var(--primary-dark)}
+.btn-secondary{background:var(--surface);color:var(--text);border:1px solid var(--border)}
+.btn-secondary:hover{border-color:var(--primary);color:var(--primary)}
+.btn-success{background:#ecfdf5;color:#059669;border:1px solid #a7f3d0}
+.btn-success:hover{background:#059669;color:#fff;border-color:#059669}
+.btn-sm{height:30px;padding:0 10px;font-size:12px;border-radius:6px}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+
+.card{background:var(--surface);border-radius:var(--radius-lg);box-shadow:var(--shadow-sm);border:1px solid var(--border-light);overflow:hidden}
+.card-header{display:flex;align-items:center;padding:20px 24px;border-bottom:1px solid var(--border-light)}
+.card-header h3{font-size:16px;font-weight:600;flex:1}
+.card-body{padding:24px}
+
+/* Stats */
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px}
+.stat-card{background:var(--surface);border-radius:var(--radius-lg);box-shadow:var(--shadow-sm);border:1px solid var(--border-light);padding:20px 24px}
+.stat-card .stat-label{font-size:12px;color:var(--text-muted);font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px}
+.stat-card .stat-value{font-size:28px;font-weight:700;color:var(--text)}
+.stat-card .stat-value.pending{color:var(--warning)}
+.stat-card .stat-value.done{color:var(--success)}
+.progress-bar-wrap{margin:20px 0;background:var(--bg);border-radius:var(--radius-lg);overflow:hidden;border:1px solid var(--border-light)}
+.progress-bar-track{height:8px;background:var(--border-light);border-radius:4px;overflow:hidden;margin:8px 0}
+.progress-bar-fill{height:100%;background:linear-gradient(90deg,var(--primary),var(--accent));border-radius:4px;transition:.5s}
+.progress-text{font-size:13px;color:var(--text-secondary);display:flex;justify-content:space-between;margin-bottom:8px}
+
+/* Table */
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{background:var(--surface-2);padding:12px 16px;text-align:left;font-weight:600;color:var(--text-secondary);font-size:12px;border-bottom:1px solid var(--border)}
+td{padding:14px 16px;border-bottom:1px solid var(--border-light);vertical-align:middle}
+tr:hover td{background:var(--surface-2)}
+
+/* Tags */
+.tag{display:inline-block;padding:3px 10px;border-radius:20px;font-size:12px;font-weight:500}
+.tag-success{background:#ecfdf5;color:#059669}
+.tag-warning{background:#fffbeb;color:#d97706}
+.tag-info{background:#eff6ff;color:#2563eb}
+.tag-default{background:#f3f4f6;color:#6b7280}
+
+/* Filters */
+.filters{display:flex;gap:12px;margin-bottom:20px;align-items:center;flex-wrap:wrap}
+.filter-input,.filter-select{height:36px;padding:0 12px;border:1px solid var(--border);border-radius:var(--radius);font-size:13px;background:var(--surface);transition:.2s}
+.filter-input:focus,.filter-select:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px rgba(184,51,37,.1)}
+.filter-input{min-width:240px}
+.filter-tabs{display:flex;gap:4px;background:var(--surface);border-radius:var(--radius);padding:4px;border:1px solid var(--border)}
+.filter-tab{padding:6px 16px;border-radius:6px;font-size:13px;cursor:pointer;transition:.2s;color:var(--text-secondary);font-weight:500}
+.filter-tab.active{background:var(--primary);color:#fff}
+.filter-tab:hover:not(.active){background:var(--surface-2)}
+
+/* Scoring */
+.scoring-layout{display:grid;grid-template-columns:1fr 380px;gap:24px}
+.work-detail-card{background:var(--surface);border-radius:var(--radius-lg);border:1px solid var(--border-light);overflow:hidden}
+.work-detail-card .wdc-header{padding:20px 24px;border-bottom:1px solid var(--border-light);display:flex;align-items:center;gap:12px}
+.work-detail-card .wdc-header .wdc-icon{width:40px;height:40px;border-radius:10px;background:rgba(184,51,37,.08);color:var(--primary);display:flex;align-items:center;justify-content:center;font-size:18px}
+.work-detail-card .wdc-header h3{font-size:16px;font-weight:600;flex:1}
+.work-detail-card .wdc-body{padding:24px}
+.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px 24px}
+.detail-item{display:flex;flex-direction:column;gap:4px}
+.detail-item .label{font-size:12px;color:var(--text-muted);font-weight:600}
+.detail-item .value{font-size:14px;color:var(--text);font-weight:500}
+.work-file-preview{margin-top:20px;padding:24px;background:var(--surface-2);border:2px dashed var(--border);border-radius:var(--radius);text-align:center}
+.work-file-preview .wfp-icon{width:48px;height:48px;border-radius:12px;background:rgba(184,51,37,.08);color:var(--primary);display:flex;align-items:center;justify-content:center;margin:0 auto 12px;font-size:22px}
+.work-file-preview h4{font-size:14px;font-weight:600;margin-bottom:4px}
+.work-file-preview p{font-size:12px;color:var(--text-muted)}
+
+.score-card{background:var(--surface);border-radius:var(--radius-lg);border:1px solid var(--border-light);overflow:hidden;position:sticky;top:24px}
+.score-card .sc-header{padding:20px 24px;border-bottom:1px solid var(--border-light);background:linear-gradient(135deg,rgba(184,51,37,.03),rgba(200,150,30,.03))}
+.score-card .sc-header h3{font-size:16px;font-weight:600}
+.score-card .sc-header p{font-size:12px;color:var(--text-secondary);margin-top:4px}
+.score-card .sc-body{padding:24px}
+.score-dimension{margin-bottom:24px}
+.score-dimension:last-child{margin-bottom:0}
+.score-dimension .sd-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.score-dimension .sd-name{font-size:14px;font-weight:600;color:var(--text)}
+.score-dimension .sd-max{font-size:12px;color:var(--text-muted)}
+.score-dimension .sd-desc{font-size:12px;color:var(--text-secondary);margin-bottom:12px;line-height:1.5}
+.score-input-wrap{display:flex;align-items:center;gap:12px}
+.score-slider{flex:1;height:6px;-webkit-appearance:none;appearance:none;background:var(--border-light);border-radius:3px;outline:none}
+.score-slider::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:var(--primary);cursor:pointer;border:3px solid #fff;box-shadow:0 2px 6px rgba(184,51,37,.3)}
+.score-slider::-moz-range-thumb{width:20px;height:20px;border-radius:50%;background:var(--primary);cursor:pointer;border:3px solid #fff;box-shadow:0 2px 6px rgba(184,51,37,.3)}
+.score-number{width:70px;height:36px;text-align:center;border:1px solid var(--border);border-radius:var(--radius);font-size:15px;font-weight:700;color:var(--primary)}
+.score-number:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px rgba(184,51,37,.1)}
+.score-total-box{margin:20px 0;padding:16px 20px;background:linear-gradient(135deg,rgba(184,51,37,.05),rgba(200,150,30,.05));border-radius:var(--radius);border:1px solid rgba(184,51,37,.1);display:flex;justify-content:space-between;align-items:center}
+.score-total-box .stb-label{font-size:13px;font-weight:600;color:var(--text-secondary)}
+.score-total-box .stb-value{font-size:32px;font-weight:800;color:var(--primary)}
+.score-total-box .stb-max{font-size:14px;color:var(--text-muted);font-weight:500}
+.comment-wrap{margin-top:20px}
+.comment-wrap label{display:block;font-size:13px;font-weight:600;margin-bottom:8px}
+.comment-wrap textarea{width:100%;min-height:80px;padding:12px;border:1px solid var(--border);border-radius:var(--radius);font-size:13px;resize:vertical;font-family:inherit;transition:.2s}
+.comment-wrap textarea:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px rgba(184,51,37,.1)}
+.scoring-actions{display:flex;gap:12px;margin-top:24px}
+.scoring-actions .btn{flex:1;justify-content:center;height:42px;font-size:14px}
+
+/* Blind review notice */
+.blind-notice{display:flex;align-items:center;gap:8px;padding:10px 16px;background:#fffbeb;border:1px solid #fde68a;border-radius:var(--radius);margin-bottom:20px;font-size:13px;color:#92400e}
+.blind-notice svg{width:16px;height:16px;flex-shrink:0}
+
+/* Rules */
+.rules-card{max-width:800px}
+.rule-item{padding:16px 0;border-bottom:1px solid var(--border-light)}
+.rule-item:last-child{border-bottom:none}
+.rule-item .ri-label{font-size:12px;color:var(--text-muted);font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}
+.rule-item .ri-value{font-size:14px;color:var(--text);line-height:1.6}
+.dimension-list{display:flex;flex-direction:column;gap:12px}
+.dimension-item{display:flex;align-items:center;gap:16px;padding:16px;background:var(--surface-2);border-radius:var(--radius);border:1px solid var(--border-light)}
+.dimension-item .di-name{font-size:14px;font-weight:600;flex:1}
+.dimension-item .di-desc{font-size:12px;color:var(--text-secondary);flex:2}
+.dimension-item .di-max{font-size:20px;font-weight:700;color:var(--primary);min-width:60px;text-align:right}
+
+/* Modal */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);display:none;align-items:center;justify-content:center;z-index:1000;padding:20px}
+.modal-overlay.show{display:flex}
+.modal{background:var(--surface);border-radius:var(--radius-lg);box-shadow:var(--shadow-lg);max-width:500px;width:100%;overflow:hidden}
+.modal-header{padding:20px 24px;border-bottom:1px solid var(--border-light);display:flex;align-items:center}
+.modal-header h3{font-size:16px;font-weight:600;flex:1}
+.modal-close{width:32px;height:32px;border:none;background:var(--surface-2);border-radius:6px;cursor:pointer;font-size:18px;color:var(--text-secondary)}
+.modal-body{padding:24px;text-align:center}
+.modal-body .mb-icon{width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,var(--success),#059669);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;color:#fff}
+.modal-body .mb-icon svg{width:32px;height:32px}
+.modal-body h4{font-size:18px;font-weight:700;margin-bottom:8px}
+.modal-body p{font-size:14px;color:var(--text-secondary);margin-bottom:24px}
+.modal-body .score-display{font-size:36px;font-weight:800;color:var(--primary);margin:12px 0}
+
+/* Responsive */
+@media(max-width:900px){
+  .scoring-layout{grid-template-columns:1fr}
+  .stats-grid{grid-template-columns:repeat(2,1fr)}
+  .detail-grid{grid-template-columns:1fr}
+}
+@media(max-width:600px){
+  .sidebar{transform:translateX(-100%);transition:.3s}
+  .sidebar.open{transform:translateX(0)}
+  .main{margin-left:0}
+  .stats-grid{grid-template-columns:1fr}
+  .filters{flex-direction:column}
+  .filter-input{min-width:100%}
+  .content{padding:16px}
+  .header{padding:0 16px}
+}
+</style>
+</head>
+<body>
+
+<!-- ===== Login ===== -->
+<div class="login-wrap" id="loginView">
+  <div class="login-card">
+    <div class="login-logo">
+      <div class="brand-icon">评</div>
+      <h1>评审系统</h1>
+      <p>第二届 AIGC 文创设计赛项</p>
+    </div>
+    <div class="login-form">
+      <div class="form-group">
+        <label>评委账号</label>
+        <input type="text" id="loginUser" placeholder="请输入账号" value="">
+      </div>
+      <div class="form-group">
+        <label>登录密码</label>
+        <input type="password" id="loginPass" placeholder="请输入密码" value="">
+      </div>
+      <button class="submit-btn" onclick="doLogin()">登录评审</button>
+      <div class="login-error" id="loginError"></div>
+    </div>
+    <div class="login-tip">
+      <div>演示账号（点击可快速填充）</div>
+      <div class="demo-accounts" id="demoAccounts"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== App ===== -->
+<div class="app" id="appView">
+  <!-- Sidebar -->
+  <div class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <div class="logo">评</div>
+      <h2>评审系统<span>AIGC 文创设计赛项</span></h2>
+    </div>
+    <div class="sidebar-nav">
+      <div class="nav-group-title">评审工作</div>
+      <div class="nav-item active" onclick="switchView('dashboard')">
+        <span class="icon">📊</span>评审概览
+      </div>
+      <div class="nav-item" onclick="switchView('works')">
+        <span class="icon">📄</span>待评审作品<span class="badge" id="pendingBadge">0</span>
+      </div>
+      <div class="nav-item" onclick="switchView('scored')">
+        <span class="icon">✅</span>已评审作品
+      </div>
+      <div class="nav-item" onclick="switchView('rules')">
+        <span class="icon">📋</span>评分规则
+      </div>
+    </div>
+    <div class="sidebar-footer">
+      <div class="judge-info">
+        <div class="judge-avatar" id="judgeAvatar">评</div>
+        <div class="judge-text">
+          <div class="name" id="judgeName">--</div>
+          <div class="role" id="judgeTitle">--</div>
+        </div>
+      </div>
+      <button class="logout-btn" onclick="doLogout()">退出登录</button>
+    </div>
+  </div>
+
+  <!-- Main -->
+  <div class="main">
+    <div class="header">
+      <h1 id="pageTitle">评审概览</h1>
+      <div class="header-deadline">
+        <span>评审截止：</span>
+        <span class="countdown" id="deadlineTag">--</span>
+      </div>
+    </div>
+    <div class="content" id="pageContent"></div>
+  </div>
+</div>
+
+<!-- Success Modal -->
+<div class="modal-overlay" id="scoreModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>评分提交成功</h3>
+      <button class="modal-close" onclick="closeScoreModal()">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="mb-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg></div>
+      <h4>评分已提交</h4>
+      <p>该作品评分已成功保存</p>
+      <div class="score-display" id="modalScore">--</div>
+      <button class="btn btn-primary" style="width:100%;height:42px;font-size:14px" onclick="closeScoreModal()">继续评审</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ===== Mock Data =====
+const COMPETITION = {
+  name: '第二届 AIGC 文创设计赛项',
+  deadline: '2026-11-10 23:59',
+  scoreDimensions: [
+    { name: '基础设计维度', max: 30, desc: '主题契合度、创意性、视觉表现、文化内涵' },
+    { name: 'AIGC 技术维度', max: 35, desc: 'AI工具应用深度、原创性、技术留痕完整性' },
+    { name: '路演答辩维度', max: 35, desc: '作品阐述、逻辑表达、团队协作、答辩表现' }
+  ],
+  rules: '评委组 5-7 人，采用百分制，去掉最高与最低分后取平均分，分值保留到小数点后两位。选拔赛与决赛为两次独立评审，获奖等次不互相带入。决赛阶段所有入围作品重新编号、统一评审。',
+  blindReview: true,
+  totalMax: 100
+};
+
+const JUDGES = [
+  { id:'J001', name:'王明远', title:'教授', org:'清华大学美术学院', username:'wangmy', password:'judge123',
+    visibleFields:['title','topic','workFile','description'], fields:['视觉传达','文创设计'] },
+  { id:'J002', name:'李雅琴', title:'副教授', org:'中央美术学院', username:'liyq', password:'judge123',
+    visibleFields:['title','topic','workFile','school','group','region'], fields:['数字艺术','交互设计'] },
+  { id:'J003', name:'张博文', title:'高级设计师', org:'字节跳动设计中心', username:'zhangbw', password:'judge123',
+    visibleFields:['title','topic','workFile'], fields:['产品设计','品牌设计'] },
+  { id:'J005', name:'刘美华', title:'创意总监', org:'奥美广告', username:'liumh', password:'judge123',
+    visibleFields:['title','topic','workFile','school'], fields:['品牌策略','视觉设计'] }
+];
+
+const ALL_WORKS = [
+  { id:'W001', title:'瓷韵千年——景德镇陶瓷文化IP设计', group:'高职组', region:'中部赛区',
+    school:'江西软件职业技术大学', team:'第3队', teacher1:'张明远', teacher2:'李婉清',
+    student1:'王子轩', student2:'陈思雨', topic:'乡土风物活化设计',
+    workFile:'瓷韵千年设计稿.pdf', description:'以景德镇千年陶瓷文化为核心，运用AIGC技术生成系列陶瓷文创IP形象，融合传统器型与现代审美。' },
+  { id:'W002', title:'红色印记——井冈山精神文创系列', group:'本科组', region:'中部赛区',
+    school:'南昌大学', team:'第7队', teacher1:'刘建国', teacher2:'',
+    student1:'赵文博', student2:'', topic:'红色文创设计',
+    workFile:'红色印记方案.pdf', description:'以井冈山革命精神为灵感，通过AIGC生成红色文创产品系列，包括文具、纪念品、包装设计。' },
+  { id:'W003', title:'绿水金山——安吉竹编创新设计', group:'中职组', region:'南部赛区',
+    school:'浙江宇翔职业技术学院', team:'第12队', teacher1:'陈美玲', teacher2:'',
+    student1:'林小雨', student2:'黄嘉怡', topic:'两山理念文创设计',
+    workFile:'安吉竹编设计.pdf', description:'围绕"绿水青山就是金山银山"理念，以安吉竹编非遗技艺为基础，运用AI生成创新竹编文创产品。' },
+  { id:'W004', title:'敦煌飞天——数字文创再设计', group:'教师组', region:'北部赛区',
+    school:'北京艺术职业学院', team:'第5队', teacher1:'周文博', teacher2:'',
+    student1:'', student2:'', topic:'乡土风物活化设计',
+    workFile:'敦煌飞天作品.pdf', description:'以敦煌壁画飞天形象为原型，通过AIGC技术重新演绎经典纹样，输出数字文创设计作品。' },
+  { id:'W005', title:'闽南非遗——蚵壳厝IP形象设计', group:'高职组', region:'南部赛区',
+    school:'厦门职业技术学院', team:'第18队', teacher1:'郑雅婷', teacher2:'吴志强',
+    student1:'许佳琪', student2:'陈嘉豪', topic:'乡土风物活化设计',
+    workFile:'蚵壳厝IP设计.pdf', description:'以泉州蚵壳厝建筑特色为灵感，运用AI生成地方文化IP形象及衍生文创产品。' },
+  { id:'W006', title:'延安精神——红色文创产品设计', group:'高职组', region:'北部赛区',
+    school:'西安职业技术学院', team:'第9队', teacher1:'王红岩', teacher2:'',
+    student1:'李梦琪', student2:'张伟', topic:'红色文创设计',
+    workFile:'延安精神文创.pdf', description:'以延安精神为主题，运用AIGC技术设计红色文创产品系列，体现艰苦奋斗的革命精神。' },
+  { id:'W007', title:'苗银之声——黔东南苗族银饰数字文创', group:'本科组', region:'南部赛区',
+    school:'贵州大学', team:'第21队', teacher1:'杨春花', teacher2:'',
+    student1:'吴小莉', student2:'石秀英', topic:'乡土风物活化设计',
+    workFile:'苗银数字文创.pdf', description:'以黔东南苗族银饰非遗技艺为核心，通过AI生成数字文创产品，推动民族文化传播。' },
+  { id:'W008', title:'京韵新声——京剧脸谱AI文创设计', group:'高职组', region:'北部赛区',
+    school:'北京戏曲艺术职业学院', team:'第15队', teacher1:'孙国华', teacher2:'',
+    student1:'刘晨阳', student2:'赵雪', topic:'乡土风物活化设计',
+    workFile:'京剧脸谱文创.pdf', description:'以京剧脸谱艺术为灵感，运用AIGC技术生成系列文创设计，融合传统戏曲元素与现代设计语言。' }
+];
+
+// Judge-to-work assignments
+const ASSIGNMENTS = {
+  'J001': ['W001','W002','W003','W004','W005','W008'],
+  'J002': ['W001','W003','W004','W006','W007'],
+  'J003': ['W002','W005','W006','W007','W008'],
+  'J005': ['W001','W002','W004','W005','W006','W007']
+};
+
+// Pre-existing scores (judge already scored some works)
+const PRE_SCORES = {
+  'J001': { 'W003': { scores:[28,32,32.5], total:92.5, comment:'选题精准，设计语言成熟，AIGC技术应用恰当，整体完成度高。' } },
+  'J002': { 'W004': { scores:[26,30,32], total:88.0, comment:'敦煌主题把握到位，数字艺术表现力强，路演答辩思路清晰。' } },
+  'J003': { 'W006': { scores:[25,28,32.5], total:85.5, comment:'红色主题理解深刻，产品设计有落地性，建议加强AIGC原创性表达。' } }
+};
+
+// ===== State =====
+let state = {
+  judge: null,
+  currentView: 'dashboard',
+  works: [],
+  scores: {},
+  filterStatus: 'all',
+  searchKeyword: '',
+  scoringWorkId: null,
+  tempScores: [],
+  tempComment: ''
+};
+
+// ===== Init =====
+function init(){
+  // Render demo accounts
+  var html = '';
+  JUDGES.forEach(function(j){
+    html += '<div class="demo-account" onclick="fillDemo(\''+j.username+'\')">' +
+      '<span class="da-user">'+j.username+' / judge123</span>' +
+      '<span class="da-name">'+j.name+'（'+j.title+'）</span>' +
+    '</div>';
+  });
+  document.getElementById('demoAccounts').innerHTML = html;
+}
+
+function fillDemo(user){
+  document.getElementById('loginUser').value = user;
+  document.getElementById('loginPass').value = 'judge123';
+}
+
+// ===== Login =====
+function doLogin(){
+  var user = document.getElementById('loginUser').value.trim();
+  var pass = document.getElementById('loginPass').value.trim();
+  var errEl = document.getElementById('loginError');
+  errEl.textContent = '';
+
+  if(!user || !pass){ errEl.textContent = '请输入账号和密码'; return; }
+
+  var judge = JUDGES.find(function(j){ return j.username === user && j.password === pass; });
+  if(!judge){
+    errEl.textContent = '账号或密码错误，请重试';
+    return;
+  }
+
+  state.judge = judge;
+  // Load assigned works
+  var assignedIds = ASSIGNMENTS[judge.id] || [];
+  state.works = ALL_WORKS.filter(function(w){ return assignedIds.indexOf(w.id) !== -1; });
+  // Load pre-existing scores
+  state.scores = JSON.parse(JSON.stringify(PRE_SCORES[judge.id] || {}));
+
+  // Show app
+  document.getElementById('loginView').style.display = 'none';
+  document.getElementById('appView').classList.add('active');
+
+  // Set judge info
+  document.getElementById('judgeAvatar').textContent = judge.name.charAt(0);
+  document.getElementById('judgeName').textContent = judge.name;
+  document.getElementById('judgeTitle').textContent = judge.title + ' · ' + judge.org;
+
+  // Set deadline
+  document.getElementById('deadlineTag').textContent = COMPETITION.deadline;
+
+  switchView('dashboard');
+}
+
+function doLogout(){
+  state.judge = null;
+  state.works = [];
+  state.scores = {};
+  document.getElementById('appView').classList.remove('active');
+  document.getElementById('loginView').style.display = 'flex';
+  document.getElementById('loginUser').value = '';
+  document.getElementById('loginPass').value = '';
+}
+
+// ===== Navigation =====
+function switchView(view){
+  state.currentView = view;
+  // Update nav
+  var items = document.querySelectorAll('.nav-item');
+  items.forEach(function(el){
+    el.classList.toggle('active', el.getAttribute('onclick') === "switchView('"+view+"')");
+  });
+
+  var titles = { dashboard:'评审概览', works:'待评审作品', scored:'已评审作品', rules:'评分规则' };
+  document.getElementById('pageTitle').textContent = titles[view] || '';
+
+  if(view === 'dashboard') renderDashboard();
+  else if(view === 'works') renderWorks('pending');
+  else if(view === 'scored') renderWorks('scored');
+  else if(view === 'rules') renderRules();
+  else if(view === 'scoring') renderScoring();
+}
+
+// ===== Dashboard =====
+function renderDashboard(){
+  var total = state.works.length;
+  var scored = Object.keys(state.scores).length;
+  var pending = total - scored;
+  var progress = total > 0 ? Math.round(scored / total * 100) : 0;
+
+  var html = '';
+  // Stats
+  html += '<div class="stats-grid">';
+  html += '<div class="stat-card"><div class="stat-label">分配作品</div><div class="stat-value">'+total+'</div></div>';
+  html += '<div class="stat-card"><div class="stat-label">待评审</div><div class="stat-value pending">'+pending+'</div></div>';
+  html += '<div class="stat-card"><div class="stat-label">已评审</div><div class="stat-value done">'+scored+'</div></div>';
+  html += '<div class="stat-card"><div class="stat-label">完成率</div><div class="stat-value">'+progress+'%</div></div>';
+  html += '</div>';
+
+  // Progress bar
+  html += '<div class="card" style="margin-bottom:24px"><div class="card-body">';
+  html += '<div class="progress-text"><span>评审进度</span><span>'+scored+' / '+total+'</span></div>';
+  html += '<div class="progress-bar-track"><div class="progress-bar-fill" style="width:'+progress+'%"></div></div>';
+  html += '</div></div>';
+
+  // Recent works (pending first)
+  html += '<div class="card"><div class="card-header"><h3>作品列表</h3>';
+  html += '<button class="btn btn-primary btn-sm" onclick="switchView(\'works\')">查看全部</button></div>';
+  html += '<div class="table-wrap"><table>';
+  html += '<thead><tr><th>作品编号</th><th>作品名称</th><th>组别</th><th>赛区</th><th>状态</th><th>操作</th></tr></thead><tbody>';
+  state.works.forEach(function(w){
+    var isScored = state.scores[w.id];
+    var tag = isScored ? '<span class="tag tag-success">已评分</span>' : '<span class="tag tag-warning">待评审</span>';
+    var actionBtn = isScored
+      ? '<button class="btn btn-secondary btn-sm" onclick="openScoring(\''+w.id+'\')">查看</button>'
+      : '<button class="btn btn-primary btn-sm" onclick="openScoring(\''+w.id+'\')">去评审</button>';
+    html += '<tr><td>'+w.id+'</td><td style="max-width:300px">'+w.title+'</td><td>'+w.group+'</td><td>'+w.region+'</td><td>'+tag+'</td><td>'+actionBtn+'</td></tr>';
+  });
+  html += '</tbody></table></div></div>';
+
+  document.getElementById('pageContent').innerHTML = html;
+
+  // Update pending badge
+  document.getElementById('pendingBadge').textContent = pending;
+}
+
+// ===== Works List =====
+function renderWorks(filterType){
+  var html = '';
+  // Filter tabs
+  html += '<div class="filters">';
+  html += '<div class="filter-tabs">';
+  html += '<div class="filter-tab '+(filterType==='all'?'active':'')+'" onclick="renderWorks(\'all\')">全部</div>';
+  html += '<div class="filter-tab '+(filterType==='pending'?'active':'')+'" onclick="renderWorks(\'pending\')">待评审</div>';
+  html += '<div class="filter-tab '+(filterType==='scored'?'active':'')+'" onclick="renderWorks(\'scored\')">已评审</div>';
+  html += '</div>';
+  html += '<input type="text" class="filter-input" placeholder="搜索作品名称..." value="'+state.searchKeyword+'" onkeyup="state.searchKeyword=this.value;filterWorks(\''+filterType+'\')">';
+  html += '</div>';
+
+  // Table
+  var filtered = state.works.filter(function(w){
+    var isScored = state.scores[w.id];
+    if(filterType === 'pending' && isScored) return false;
+    if(filterType === 'scored' && !isScored) return false;
+    if(state.searchKeyword){
+      var kw = state.searchKeyword.toLowerCase();
+      if(w.title.toLowerCase().indexOf(kw) === -1 && w.id.toLowerCase().indexOf(kw) === -1) return false;
+    }
+    return true;
+  });
+
+  html += '<div class="card"><div class="table-wrap"><table>';
+  html += '<thead><tr><th>作品编号</th><th>作品名称</th><th>组别</th><th>赛区</th><th>命题</th><th>状态</th><th>评分</th><th>操作</th></tr></thead><tbody>';
+  if(filtered.length === 0){
+    html += '<tr><td colspan="8" style="text-align:center;padding:40px;color:var(--text-muted)">暂无作品</td></tr>';
+  } else {
+    filtered.forEach(function(w){
+      var isScored = state.scores[w.id];
+      var tag = isScored ? '<span class="tag tag-success">已评分</span>' : '<span class="tag tag-warning">待评审</span>';
+      var scoreText = isScored ? '<span style="font-weight:700;color:var(--primary)">'+isScored.total+'分</span>' : '<span style="color:var(--text-muted)">--</span>';
+      var actionBtn = isScored
+        ? '<button class="btn btn-secondary btn-sm" onclick="openScoring(\''+w.id+'\')">查看评分</button>'
+        : '<button class="btn btn-primary btn-sm" onclick="openScoring(\''+w.id+'\')">去评审</button>';
+      html += '<tr><td>'+w.id+'</td><td style="max-width:280px">'+w.title+'</td><td>'+w.group+'</td><td>'+w.region+'</td><td>'+w.topic+'</td><td>'+tag+'</td><td>'+scoreText+'</td><td>'+actionBtn+'</td></tr>';
+    });
+  }
+  html += '</tbody></table></div></div>';
+
+  document.getElementById('pageContent').innerHTML = html;
+
+  // Update pending badge
+  var pendingCount = state.works.length - Object.keys(state.scores).length;
+  document.getElementById('pendingBadge').textContent = pendingCount;
+}
+
+function filterWorks(filterType){
+  renderWorks(filterType);
+}
+
+// ===== Scoring =====
+function openScoring(workId){
+  state.scoringWorkId = workId;
+  var existing = state.scores[workId];
+  if(existing){
+    state.tempScores = existing.scores.slice();
+    state.tempComment = existing.comment;
+  } else {
+    state.tempScores = COMPETITION.scoreDimensions.map(function(){ return 0; });
+    state.tempComment = '';
+  }
+  // Update nav
+  document.querySelectorAll('.nav-item').forEach(function(el){ el.classList.remove('active'); });
+  document.getElementById('pageTitle').textContent = '作品评分';
+  renderScoring();
+}
+
+function renderScoring(){
+  var workId = state.scoringWorkId;
+  if(!workId){ switchView('dashboard'); return; }
+
+  var work = state.works.find(function(w){ return w.id === workId; });
+  if(!work){ switchView('dashboard'); return; }
+
+  var isScored = state.scores[workId];
+  var isVisible = function(field){ return state.judge.visibleFields.indexOf(field) !== -1; };
+
+  var html = '';
+
+  // Back button
+  html += '<div style="margin-bottom:16px"><button class="btn btn-secondary btn-sm" onclick="switchView(\'dashboard\')">← 返回列表</button></div>';
+
+  // Blind review notice
+  if(COMPETITION.blindReview){
+    html += '<div class="blind-notice">';
+    html += '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>';
+    html += '<span>当前为盲审模式，部分作品信息已隐藏</span>';
+    html += '</div>';
+  }
+
+  html += '<div class="scoring-layout">';
+
+  // Left: Work details
+  html += '<div class="work-detail-card">';
+  html += '<div class="wdc-header"><div class="wdc-icon">📄</div><h3>作品信息</h3></div>';
+  html += '<div class="wdc-body">';
+
+  // Detail grid (respect blind review)
+  html += '<div class="detail-grid">';
+  html += '<div class="detail-item"><span class="label">作品编号</span><span class="value">'+work.id+'</span></div>';
+  html += '<div class="detail-item"><span class="label">作品名称</span><span class="value">'+work.title+'</span></div>';
+  if(isVisible('group')) html += '<div class="detail-item"><span class="label">组别</span><span class="value">'+work.group+'</span></div>';
+  if(isVisible('region')) html += '<div class="detail-item"><span class="label">赛区</span><span class="value">'+work.region+'</span></div>';
+  if(isVisible('school')) html += '<div class="detail-item"><span class="label">院校</span><span class="value">'+work.school+'</span></div>';
+  if(isVisible('team')) html += '<div class="detail-item"><span class="label">队伍</span><span class="value">'+work.team+'</span></div>';
+  if(isVisible('teacher1')) html += '<div class="detail-item"><span class="label">指导老师</span><span class="value">'+work.teacher1+(work.teacher2?'、'+work.teacher2:'')+'</span></div>';
+  if(isVisible('student1')) html += '<div class="detail-item"><span class="label">参赛选手</span><span class="value">'+(work.student1||'--')+(work.student2?'、'+work.student2:'')+'</span></div>';
+  html += '<div class="detail-item"><span class="label">命题方向</span><span class="value">'+work.topic+'</span></div>';
+  html += '</div>';
+
+  // Description
+  if(work.description && isVisible('description')){
+    html += '<div style="margin-top:20px;padding:16px;background:var(--surface-2);border-radius:var(--radius);border:1px solid var(--border-light)">';
+    html += '<div style="font-size:12px;color:var(--text-muted);font-weight:600;margin-bottom:8px">作品简介</div>';
+    html += '<div style="font-size:13px;color:var(--text);line-height:1.6">'+work.description+'</div>';
+    html += '</div>';
+  }
+
+  // Work file
+  if(isVisible('workFile')){
+    html += '<div class="work-file-preview">';
+    html += '<div class="wfp-icon">📎</div>';
+    html += '<h4>'+work.workFile+'</h4>';
+    html += '<p>PDF 格式 · 点击预览作品附件</p>';
+    html += '<button class="btn btn-secondary btn-sm" style="margin-top:12px">预览作品</button>';
+    html += '</div>';
+  }
+
+  // Hidden fields notice
+  if(COMPETITION.blindReview){
+    var hiddenFields = [];
+    if(!isVisible('school')) hiddenFields.push('院校');
+    if(!isVisible('team')) hiddenFields.push('队伍');
+    if(!isVisible('teacher1')) hiddenFields.push('指导老师');
+    if(!isVisible('student1')) hiddenFields.push('参赛选手');
+    if(!isVisible('group')) hiddenFields.push('组别');
+    if(!isVisible('region')) hiddenFields.push('赛区');
+    if(hiddenFields.length > 0){
+      html += '<div style="margin-top:16px;padding:12px 16px;background:#f9fafb;border-radius:var(--radius);font-size:12px;color:var(--text-muted)">';
+      html += '以下信息已隐藏：'+hiddenFields.join('、');
+      html += '</div>';
+    }
+  }
+
+  html += '</div></div>'; // end wdc-body, work-detail-card
+
+  // Right: Score card
+  html += '<div class="score-card">';
+  html += '<div class="sc-header"><h3>评分打分</h3><p>总分 100 分，请逐项打分</p></div>';
+  html += '<div class="sc-body">';
+
+  // Score dimensions
+  COMPETITION.scoreDimensions.forEach(function(dim, idx){
+    var score = state.tempScores[idx] || 0;
+    html += '<div class="score-dimension">';
+    html += '<div class="sd-header"><span class="sd-name">'+dim.name+'</span><span class="sd-max">满分 '+dim.max+'</span></div>';
+    html += '<div class="sd-desc">'+dim.desc+'</div>';
+    html += '<div class="score-input-wrap">';
+    html += '<input type="range" class="score-slider" min="0" max="'+dim.max+'" step="0.5" value="'+score+'" id="slider_'+idx+'" oninput="updateScore('+idx+',this.value)">';
+    html += '<input type="number" class="score-number" min="0" max="'+dim.max+'" step="0.5" value="'+score+'" id="number_'+idx+'" oninput="updateScore('+idx+',this.value)">';
+    html += '</div>';
+    html += '</div>';
+  });
+
+  // Total score
+  var total = state.tempScores.reduce(function(a,b){ return a + (parseFloat(b)||0); }, 0);
+  html += '<div class="score-total-box">';
+  html += '<span class="stb-label">总分</span>';
+  html += '<div><span class="stb-value" id="totalScore">'+total.toFixed(1)+'</span><span class="stb-max"> / '+COMPETITION.totalMax+'</span></div>';
+  html += '</div>';
+
+  // Comment
+  html += '<div class="comment-wrap">';
+  html += '<label>评审意见</label>';
+  html += '<textarea placeholder="请输入评审意见（选填）" id="commentInput" oninput="state.tempComment=this.value">'+state.tempComment+'</textarea>';
+  html += '</div>';
+
+  // Actions
+  html += '<div class="scoring-actions">';
+  html += '<button class="btn btn-secondary" onclick="switchView(\'dashboard\')">取消</button>';
+  if(isScored){
+    html += '<button class="btn btn-success" onclick="submitScore()">更新评分</button>';
+  } else {
+    html += '<button class="btn btn-primary" onclick="submitScore()">提交评分</button>';
+  }
+  html += '</div>';
+
+  html += '</div></div>'; // end sc-body, score-card
+
+  html += '</div>'; // end scoring-layout
+
+  document.getElementById('pageContent').innerHTML = html;
+}
+
+function updateScore(idx, val){
+  val = parseFloat(val) || 0;
+  var max = COMPETITION.scoreDimensions[idx].max;
+  if(val > max) val = max;
+  if(val < 0) val = 0;
+  state.tempScores[idx] = val;
+  // Sync slider and number
+  var slider = document.getElementById('slider_'+idx);
+  var number = document.getElementById('number_'+idx);
+  if(slider) slider.value = val;
+  if(number) number.value = val;
+  // Update total
+  var total = state.tempScores.reduce(function(a,b){ return a + (parseFloat(b)||0); }, 0);
+  var totalEl = document.getElementById('totalScore');
+  if(totalEl) totalEl.textContent = total.toFixed(1);
+}
+
+function submitScore(){
+  var workId = state.scoringWorkId;
+  var total = state.tempScores.reduce(function(a,b){ return a + (parseFloat(b)||0); }, 0);
+
+  // Validate
+  for(var i = 0; i < COMPETITION.scoreDimensions.length; i++){
+    var s = parseFloat(state.tempScores[i]) || 0;
+    if(s <= 0){
+      alert('请为「'+COMPETITION.scoreDimensions[i].name+'」打分');
+      return;
+    }
+  }
+
+  // Save
+  state.scores[workId] = {
+    scores: state.tempScores.slice(),
+    total: total,
+    comment: state.tempComment
+  };
+
+  // Show success modal
+  document.getElementById('modalScore').textContent = total.toFixed(1) + ' 分';
+  document.getElementById('scoreModal').classList.add('show');
+}
+
+function closeScoreModal(){
+  document.getElementById('scoreModal').classList.remove('show');
+  switchView('dashboard');
+}
+
+// ===== Rules =====
+function renderRules(){
+  var html = '';
+  html += '<div class="card rules-card"><div class="card-body">';
+
+  // Rules
+  html += '<div class="rule-item"><div class="ri-label">赛事名称</div><div class="ri-value">'+COMPETITION.name+'</div></div>';
+  html += '<div class="rule-item"><div class="ri-label">评审截止时间</div><div class="ri-value" style="color:var(--primary);font-weight:600">'+COMPETITION.deadline+'</div></div>';
+  html += '<div class="rule-item"><div class="ri-label">盲审模式</div><div class="ri-value">'+(COMPETITION.blindReview?'已开启（评委不可查看部分作品信息）':'未开启')+'</div></div>';
+
+  // Dimensions
+  html += '<div class="rule-item"><div class="ri-label">评分维度（共 '+COMPETITION.totalMax+' 分）</div>';
+  html += '<div class="dimension-list" style="margin-top:12px">';
+  COMPETITION.scoreDimensions.forEach(function(dim){
+    html += '<div class="dimension-item">';
+    html += '<div class="di-name">'+dim.name+'</div>';
+    html += '<div class="di-desc">'+dim.desc+'</div>';
+    html += '<div class="di-max">'+dim.max+'</div>';
+    html += '</div>';
+  });
+  html += '</div></div>';
+
+  // Scoring rules text
+  html += '<div class="rule-item"><div class="ri-label">评分规则</div><div class="ri-value" style="line-height:1.8">'+COMPETITION.rules+'</div></div>';
+
+  // Judge visible fields
+  var vfLabels = { title:'作品名称', topic:'命题方向', workFile:'作品附件', description:'作品简介', school:'院校', group:'组别', region:'赛区', team:'队伍', teacher1:'指导老师', student1:'参赛选手' };
+  var vfText = state.judge.visibleFields.map(function(f){ return vfLabels[f] || f; }).join('、');
+  html += '<div class="rule-item"><div class="ri-label">您可查看的作品字段</div><div class="ri-value">'+vfText+'</div></div>';
+
+  html += '</div></div>';
+
+  document.getElementById('pageContent').innerHTML = html;
+}
+
+// ===== Init =====
+init();
+</script>
+</body>
+</html>
