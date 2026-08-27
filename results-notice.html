@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>赛事结果公示 | 第二届 AIGC 文创设计赛项</title>
+<meta name="description" content="第二届AIGC文创设计赛项选拔赛评审结果公示通知及相关文件下载。">
+<style>
+@font-face { font-family:'Bricolage Grotesque'; src:url('./_shared/fonts/BricolageGrotesque-Bold.ttf') format('truetype'); font-weight:700; font-display:swap; }
+@font-face { font-family:'Bricolage Grotesque'; src:url('./_shared/fonts/BricolageGrotesque-Regular.ttf') format('truetype'); font-weight:400; font-display:swap; }
+@font-face { font-family:'Outfit'; src:url('./_shared/fonts/Outfit-Bold.ttf') format('truetype'); font-weight:700; font-display:swap; }
+@font-face { font-family:'Outfit'; src:url('./_shared/fonts/Outfit-Regular.ttf') format('truetype'); font-weight:400; font-display:swap; }
+@font-face { font-family:'JetBrains Mono'; src:url('./_shared/fonts/JetBrainsMono-Bold.ttf') format('truetype'); font-weight:700; font-display:swap; }
+@font-face { font-family:'JetBrains Mono'; src:url('./_shared/fonts/JetBrainsMono-Regular.ttf') format('truetype'); font-weight:400; font-display:swap; }
+
+:root{
+  --bg:#f6f1e7; --bg2:#ffffff; --ink:#1c1a26; --muted:#6e6c7a;
+  --rule:#e4dccb; --accent:#c8362a; --accent2:#c8961e;
+  --dark:#14111d; --dark2:#241f33; --on-dark:#f4efe2; --on-dark-muted:#b9b0a0;
+  --display:'Bricolage Grotesque','PingFang SC','Noto Sans CJK SC','Microsoft YaHei','Hiragino Sans GB',sans-serif;
+  --body:'Outfit','PingFang SC','Noto Sans CJK SC','Microsoft YaHei','Hiragino Sans GB',sans-serif;
+  --mono:'JetBrains Mono','PingFang SC','Noto Sans CJK SC',monospace;
+  --maxw:860px; --radius:14px;
+  --shadow:0 18px 50px -28px rgba(28,26,38,.35);
+  --shadow-sm:0 8px 26px -16px rgba(28,26,38,.25);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:78px}
+body{font-family:var(--body);background:var(--bg);color:var(--ink);line-height:1.7;font-size:16px;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;overflow-x:hidden}
+img{max-width:100%;display:block}
+a{color:inherit;text-decoration:none}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+
+/* Nav */
+.nav{position:sticky;top:0;z-index:100;background:rgba(246,241,231,.85);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--rule)}
+.nav-inner{max-width:var(--maxw);margin:0 auto;padding:0 24px;height:66px;display:flex;align-items:center;gap:18px}
+.brand{display:flex;align-items:center;gap:12px;font-family:var(--display);font-weight:700;font-size:1.05rem;letter-spacing:-.01em;white-space:nowrap}
+.brand .seal{width:34px;height:34px;border-radius:9px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:grid;place-items:center;color:#fff;font-family:var(--mono);font-weight:700;font-size:.82rem;flex-shrink:0;box-shadow:0 4px 14px -4px rgba(200,54,42,.55)}
+.brand small{display:block;font-family:var(--mono);font-weight:400;font-size:.62rem;color:var(--muted);letter-spacing:.05em;margin-top:-2px}
+.nav-links{display:flex;gap:6px;margin-left:auto;align-items:center}
+.nav-links a{font-size:.86rem;color:var(--muted);padding:8px 12px;border-radius:8px;transition:.18s;font-weight:500}
+.nav-links a:hover{color:var(--ink);background:rgba(28,26,38,.05)}
+
+/* Buttons */
+.btn{display:inline-flex;align-items:center;gap:9px;font-family:var(--body);font-weight:700;font-size:.96rem;padding:14px 26px;border-radius:12px;cursor:pointer;transition:.22s;border:none;letter-spacing:.01em;white-space:nowrap}
+.btn-primary{background:linear-gradient(135deg,var(--accent),#a8261d);color:#fff;box-shadow:0 12px 30px -10px rgba(200,54,42,.6)}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 18px 38px -10px rgba(200,54,42,.7)}
+.btn-sm{font-size:.84rem;padding:10px 18px;border-radius:9px}
+.btn svg{width:18px;height:18px}
+
+/* Hero */
+.hero{position:relative;color:var(--on-dark);overflow:hidden;background:var(--dark)}
+.hero-bg{position:absolute;inset:0;z-index:0}
+.hero-bg img{width:100%;height:100%;object-fit:cover;opacity:.5}
+.hero-bg::after{content:'';position:absolute;inset:0;background:linear-gradient(110deg,rgba(20,17,29,.95) 0%,rgba(20,17,29,.65) 50%,rgba(36,31,51,.6) 100%)}
+.hero-bg::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 80% 20%,rgba(200,54,42,.28),transparent 55%),radial-gradient(circle at 15% 85%,rgba(200,150,30,.22),transparent 50%);z-index:1}
+.hero-inner{position:relative;z-index:2;max-width:var(--maxw);margin:0 auto;padding:90px 24px 80px}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:10px;font-family:var(--mono);font-size:.78rem;letter-spacing:.12em;color:var(--accent2);text-transform:uppercase;margin-bottom:22px}
+.hero-eyebrow .dot{width:7px;height:7px;border-radius:50%;background:var(--accent2);box-shadow:0 0 12px var(--accent2)}
+.hero h1{font-family:var(--display);font-weight:700;font-size:clamp(2.2rem,5vw,3.6rem);line-height:1.05;letter-spacing:-.025em;margin-bottom:18px}
+.hero h1 .gold{background:linear-gradient(120deg,var(--accent2),#e8c766);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.hero-banner{display:inline-flex;align-items:center;gap:10px;background:rgba(200,54,42,.18);color:var(--accent2);font-weight:700;font-size:.88rem;padding:8px 18px;border-radius:24px;font-family:var(--mono);margin-bottom:28px}
+.hero-banner .pulse-dot{width:8px;height:8px;border-radius:50%;background:var(--accent2);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.hero-actions{display:flex;gap:14px;flex-wrap:wrap}
+.btn-gold{background:linear-gradient(135deg,var(--accent2),#a87a13);color:#1c1a26;box-shadow:0 12px 30px -10px rgba(200,150,30,.55)}
+.btn-gold:hover{transform:translateY(-2px)}
+.btn-ghost{background:transparent;color:var(--on-dark);border:1.5px solid rgba(244,239,226,.45)}
+.btn-ghost:hover{background:rgba(244,239,226,.1);border-color:rgba(244,239,226,.8)}
+
+/* Content */
+.content{padding:64px 0 80px}
+.section-head{margin-bottom:40px;max-width:720px}
+.section-num{font-family:var(--mono);font-size:.78rem;letter-spacing:.16em;color:var(--accent);text-transform:uppercase;font-weight:700;display:block;margin-bottom:12px}
+.section-head h2{font-family:var(--display);font-weight:700;font-size:clamp(1.6rem,3.2vw,2.2rem);line-height:1.1;letter-spacing:-.02em;margin-bottom:14px}
+.section-head .accent-line{width:54px;height:4px;border-radius:3px;background:linear-gradient(90deg,var(--accent),var(--accent2));margin-bottom:18px}
+
+/* Stats */
+.results-meta{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:36px}
+.results-meta .rm-item{background:var(--bg2);border:1px solid var(--rule);border-radius:var(--radius);padding:18px 28px;text-align:center;flex:1;min-width:130px;transition:.2s}
+.results-meta .rm-item:hover{border-color:var(--accent2);box-shadow:var(--shadow-sm)}
+.results-meta .rm-item .rm-value{font-family:var(--mono);font-size:1.8rem;font-weight:700;color:var(--accent);line-height:1}
+.results-meta .rm-item .rm-label{font-size:.82rem;color:var(--muted);margin-top:6px}
+
+/* Notice */
+.results-notice{background:var(--bg2);border:1.5px solid var(--rule);border-left:5px solid var(--accent);border-radius:var(--radius);padding:36px;margin-bottom:40px;display:flex;gap:24px}
+.results-notice .rn-icon{width:48px;height:48px;border-radius:50%;background:rgba(200,54,42,.08);color:var(--accent);display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:800;flex-shrink:0}
+.results-notice .rn-content h3{font-family:var(--display);font-size:1.15rem;margin-bottom:16px;color:var(--ink)}
+.results-notice .rn-content p{font-size:.94rem;color:var(--muted);line-height:1.8;margin-bottom:10px}
+.results-notice .rn-content p:last-child{margin-bottom:0}
+.results-notice .rn-content strong{color:var(--accent);font-weight:700}
+.rn-seal{margin-top:18px;padding-top:14px;border-top:1px dashed var(--rule);color:var(--accent2);font-weight:600;font-size:.9rem}
+
+/* Downloads */
+.results-downloads h3{font-family:var(--display);font-size:1.15rem;margin-bottom:20px;color:var(--ink)}
+.rd-grid{display:grid;grid-template-columns:1fr;gap:14px}
+.rd-card{display:flex;align-items:center;gap:16px;padding:20px 24px;background:var(--bg2);border:1px solid var(--rule);border-radius:var(--radius);transition:.2s}
+.rd-card:hover{border-color:var(--accent2);box-shadow:var(--shadow-sm)}
+.rd-card .rd-icon{width:44px;height:44px;border-radius:10px;background:rgba(200,54,42,.06);color:var(--accent);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.rd-card .rd-info{flex:1;min-width:0}
+.rd-card .rd-info h4{font-size:.96rem;font-weight:700;margin-bottom:4px;color:var(--ink)}
+.rd-card .rd-info p{font-size:.84rem;color:var(--muted);margin-bottom:4px}
+.rd-card .rd-info .rd-format{font-family:var(--mono);font-size:.74rem;color:var(--accent2);font-weight:600}
+
+/* Footer */
+.footer{background:var(--dark);color:var(--on-dark-muted);padding:48px 0 36px;margin-top:20px}
+.footer-inner{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+.footer-top{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;margin-bottom:24px;padding-bottom:24px;border-bottom:1px solid rgba(244,239,226,.12)}
+.footer-brand{font-family:var(--display);font-weight:700;font-size:1.1rem;color:var(--on-dark);margin-bottom:6px}
+.footer-brand small{display:block;font-family:var(--mono);font-weight:400;font-size:.68rem;color:var(--on-dark-muted);margin-top:4px}
+.footer-back a{display:inline-flex;align-items:center;gap:8px;font-size:.86rem;color:var(--accent2);font-weight:700}
+.footer-copy{text-align:center;font-size:.8rem;line-height:1.7}
+.footer-copy .disclaimer{margin-top:8px;font-size:.74rem;color:rgba(244,239,226,.4)}
+
+/* Floating sidebar */
+.float-cta{position:fixed;right:18px;top:50%;transform:translateY(-50%);z-index:90;display:flex;flex-direction:column;gap:10px}
+.float-cta .fbtn{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;width:72px;height:72px;border-radius:14px;border:1px solid var(--rule);background:var(--bg2);color:var(--ink);font-size:.64rem;font-weight:700;cursor:pointer;transition:.2s;text-align:center;line-height:1.3;box-shadow:var(--shadow-sm);text-decoration:none;font-family:var(--body)}
+.float-cta .fbtn:hover{transform:translateY(-2px);box-shadow:var(--shadow);border-color:var(--accent)}
+.float-cta .fbtn svg{width:22px;height:22px}
+.float-cta .fbtn.gold{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;border-color:transparent}
+.float-cta .fbtn.dark{background:var(--ink);color:var(--on-dark);border-color:transparent}
+.float-cta .back-top{display:none}
+
+/* Responsive */
+@media(max-width:768px){
+  .nav-links{display:none}
+  .results-meta{gap:10px}
+  .results-meta .rm-item{padding:14px 16px;min-width:calc(50% - 5px)}
+  .results-notice{flex-direction:column;gap:16px;padding:24px}
+  .float-cta{right:12px;gap:8px}
+  .float-cta .fbtn{width:60px;height:60px;font-size:.56rem}
+  .float-cta .fbtn svg{width:20px;height:20px}
+  .float-cta .back-top{display:flex}
+  .content{padding:40px 0 60px}
+  .hero-inner{padding:70px 24px 60px}
+}
+</style>
+</head>
+<body>
+
+<!-- Nav -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="brand">
+      <span class="seal">AIGC</span>
+      <span>第二届AIGC文创设计<small>BRICS2026-ST-164</small></span>
+    </a>
+    <div class="nav-links">
+      <a href="index.html">赛事首页</a>
+      <a href="#notice">公示通知</a>
+      <a href="#downloads">文件下载</a>
+    </div>
+    <a href="index.html" class="btn btn-primary btn-sm" style="margin-left:auto">返回赛事首页</a>
+  </div>
+</nav>
+
+<!-- Hero -->
+<header class="hero" id="top">
+  <div class="hero-bg"><img src="assets/hero_2560x1440.jpg" alt="AIGC 文创设计赛项"></div>
+  <div class="hero-inner">
+    <div class="hero-eyebrow"><span class="dot"></span>2026 一带一路暨金砖国家技能发展与技术创新大赛</div>
+    <h1>第二届 <span class="gold">AIGC 文创设计</span> 赛项<br>选拔赛结果公示</h1>
+    <div class="hero-banner">
+      <span class="pulse-dot"></span>评审工作已结束 · 结果公示中
+    </div>
+    <div class="hero-actions">
+      <a href="#notice" class="btn btn-gold">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4"/><path d="M21 12c0 4.97-4.03 9-9 9s-9-4.03-9-9 4.03-9 9-9 9 4.03 9 9z"/></svg>查看公示通知
+      </a>
+      <a href="#downloads" class="btn btn-ghost">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>下载相关文件
+      </a>
+    </div>
+  </div>
+</header>
+
+<!-- Content -->
+<div class="content">
+  <div class="wrap">
+
+    <!-- Notice -->
+    <div class="section-head" id="notice">
+      <span class="section-num">公示通知 / Official Announcement</span>
+      <div class="accent-line"></div>
+      <h2>选拔赛评审结果公示</h2>
+    </div>
+
+    <!-- Stats -->
+    <div class="results-meta">
+      <div class="rm-item"><div class="rm-value">328</div><div class="rm-label">参赛队伍</div></div>
+      <div class="rm-item"><div class="rm-value">156</div><div class="rm-label">入围作品</div></div>
+      <div class="rm-item"><div class="rm-value">48</div><div class="rm-label">获奖作品</div></div>
+      <div class="rm-item"><div class="rm-value">7</div><div class="rm-label">公示天数</div></div>
+    </div>
+
+    <!-- Notification text -->
+    <div class="results-notice">
+      <div class="rn-icon">!</div>
+      <div class="rn-content">
+        <h3>关于第二届AIGC文创设计赛项选拔赛评审结果的公示</h3>
+        <p>各位参赛选手、指导老师及各相关单位：</p>
+        <p>第二届AIGC文创设计赛项选拔赛评审工作已于2026年11月15日圆满结束。本届赛项共有来自全国北部、中部、南部三个赛区的328支队伍参赛，涉及教师组、中职组、高职组、本科组四个组别。经专家评审组按照"基础设计维度（30分）、AIGC技术维度（35分）、路演答辩维度（35分）"三个维度的严格评审，现将评审结果予以公示。</p>
+        <p><strong>公示期：2026年11月16日至2026年11月22日（共7天）</strong></p>
+        <p>如对评审结果有异议，请在公示期内以书面形式向大赛组委会提出，并提供相关证明材料，逾期不再受理。公示期满无异议后，将正式公布获奖名单并启动决赛阶段工作。</p>
+        <p>决赛拟定于2026年11月20日在江西南昌举行，具体安排另行通知，请关注大赛官网及交流群获取最新信息。</p>
+        <div class="rn-seal">一带一路暨金砖国家技能发展与技术创新大赛组委会<br>2026年11月16日</div>
+      </div>
+    </div>
+
+    <!-- Downloads -->
+    <div class="results-downloads" id="downloads">
+      <h3>相关文件下载</h3>
+      <div class="rd-grid">
+        <div class="rd-card">
+          <div class="rd-icon">📄</div>
+          <div class="rd-info">
+            <h4>获奖名单（按组别）</h4>
+            <p>含教师组、中职组、高职组、本科组全部获奖名单</p>
+            <span class="rd-format">PDF · 2.3MB</span>
+          </div>
+          <a href="#" class="btn btn-primary btn-sm" onclick="alert('演示文件，正式发布后可下载');return false">下载</a>
+        </div>
+        <div class="rd-card">
+          <div class="rd-icon">📊</div>
+          <div class="rd-info">
+            <h4>评审结果汇总表</h4>
+            <p>各作品评审得分及排名明细</p>
+            <span class="rd-format">XLSX · 1.8MB</span>
+          </div>
+          <a href="#" class="btn btn-primary btn-sm" onclick="alert('演示文件，正式发布后可下载');return false">下载</a>
+        </div>
+        <div class="rd-card">
+          <div class="rd-icon">📋</div>
+          <div class="rd-info">
+            <h4>公示通知原件</h4>
+            <p>组委会盖章版公示通知文件</p>
+            <span class="rd-format">PDF · 860KB</span>
+          </div>
+          <a href="#" class="btn btn-primary btn-sm" onclick="alert('演示文件，正式发布后可下载');return false">下载</a>
+        </div>
+        <div class="rd-card">
+          <div class="rd-icon">🎓</div>
+          <div class="rd-info">
+            <h4>证书领取说明</h4>
+            <p>获奖证书领取流程及注意事项</p>
+            <span class="rd-format">PDF · 520KB</span>
+          </div>
+          <a href="#" class="btn btn-primary btn-sm" onclick="alert('演示文件，正式发布后可下载');return false">下载</a>
+        </div>
+        <div class="rd-card">
+          <div class="rd-icon">📝</div>
+          <div class="rd-info">
+            <h4>决赛参赛须知</h4>
+            <p>决赛报名、路演答辩及现场注意事项</p>
+            <span class="rd-format">PDF · 1.2MB</span>
+          </div>
+          <a href="#" class="btn btn-primary btn-sm" onclick="alert('演示文件，正式发布后可下载');return false">下载</a>
+        </div>
+        <div class="rd-card">
+          <div class="rd-icon">🗂</div>
+          <div class="rd-info">
+            <h4>优秀作品集</h4>
+            <p>各组别获奖作品设计展示合集</p>
+            <span class="rd-format">PDF · 15.6MB</span>
+          </div>
+          <a href="#" class="btn btn-primary btn-sm" onclick="alert('演示文件，正式发布后可下载');return false">下载</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Footer -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div>
+        <div class="footer-brand">第二届 AIGC 文创设计赛项<small>BRICS2026-ST-164 · 2026 一带一路暨金砖大赛</small></div>
+      </div>
+      <div class="footer-back">
+        <a href="index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px"><path d="m18 15-6-6-6 6"/></svg>返回赛事首页</a>
+      </div>
+    </div>
+    <div class="footer-copy">
+      <p>2026 一带一路暨金砖国家技能发展与技术创新大赛组委会 · 一带一路暨金砖国家技能发展国际联盟</p>
+      <p>公示发布日期：2026 年 11 月 16 日</p>
+      <p class="disclaimer">本页面内容依据大赛评审结果整理，仅供赛事公示参考，具体以官方文件为准。</p>
+    </div>
+  </div>
+</footer>
+
+<!-- Floating sidebar -->
+<div class="float-cta">
+  <a href="#notice" class="fbtn gold">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4"/><path d="M21 12c0 4.97-4.03 9-9 9s-9-4.03-9-9 4.03-9 9-9 9 4.03 9 9z"/></svg>公示通知
+  </a>
+  <a href="#downloads" class="fbtn dark">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>文件下载
+  </a>
+  <a href="index.html" class="fbtn">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m18 15-6-6-6 6"/></svg>赛事首页
+  </a>
+  <button class="fbtn back-top" id="backTop" aria-label="返回顶部">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m18 15-6-6-6 6"/></svg>返回顶部
+  </button>
+</div>
+
+<script>
+// Back to top
+(function(){
+  var b=document.getElementById('backTop');
+  if(b) b.addEventListener('click',function(e){e.preventDefault();window.scrollTo({top:0,behavior:'smooth'})});
+})();
+</script>
+
+</body>
+</html>
