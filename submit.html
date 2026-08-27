@@ -119,6 +119,8 @@ a{color:inherit;text-decoration:none}
 .success-box .sb-info .si-row:last-child{border-bottom:none}
 .success-box .sb-info .si-row .si-k{color:var(--muted)}
 .success-box .sb-info .si-row .si-v{font-weight:700;color:var(--ink)}
+.success-box .sb-actions{display:flex;gap:14px;justify-content:center;max-width:420px;margin:0 auto;flex-wrap:wrap}
+.success-box .sb-actions .btn{flex:1;min-width:160px;justify-content:center}
 
 /* Responsive */
 @media(max-width:600px){
@@ -128,6 +130,7 @@ a{color:inherit;text-decoration:none}
   .form-actions .btn{width:100%;justify-content:center}
   .progress-inner{flex-wrap:wrap;gap:10px}
   .progress-step{font-size:.76rem}
+  .success-box .sb-actions{flex-direction:column}
 }
 </style>
 </head>
@@ -310,7 +313,7 @@ a{color:inherit;text-decoration:none}
   <div class="success-box">
     <div class="sb-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg></div>
     <h2>作品提交成功！</h2>
-    <p>您的参赛作品已成功提交，请耐心等待评审结果。</p>
+    <p>参赛作品已成功提交</p>
     <div class="sb-info">
       <div class="si-row"><span class="si-k">赛区</span><span class="si-v" id="rRegion">-</span></div>
       <div class="si-row"><span class="si-k">组别</span><span class="si-v" id="rGroup">-</span></div>
@@ -318,9 +321,14 @@ a{color:inherit;text-decoration:none}
       <div class="si-row"><span class="si-k">队伍</span><span class="si-v" id="rTeam">-</span></div>
       <div class="si-row"><span class="si-k">提交时间</span><span class="si-v" id="rTime">-</span></div>
     </div>
-    <a href="aigc-wenchuang-2026.html" class="btn btn-primary">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg>返回赛事主页
-    </a>
+    <div class="sb-actions">
+      <button type="button" class="btn btn-ghost" id="editBtn" onclick="returnToForm()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>修改作品
+      </button>
+      <a href="https://www.ccopyright.com.cn/" target="_blank" rel="noopener noreferrer" class="btn btn-primary" id="copyrightBtn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4"/><path d="M21 12c0 4.97-4.03 9-9 9s-9-4.03-9-9 4.03-9 9-9 9 4.03 9 9z"/></svg>版权登记
+      </a>
+    </div>
   </div>
 </div>
 
@@ -360,6 +368,16 @@ function handleFileUpload(input, containerId){
       container.appendChild(div);
     })(files[j]);
   }
+}
+
+// Return to form for editing
+function returnToForm(){
+  document.getElementById('successArea').style.display='none';
+  document.getElementById('formArea').style.display='block';
+  var btn=document.getElementById('submitBtn');
+  btn.disabled=false;
+  btn.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 13l4 4L19 7"/></svg>确认提交';
+  window.scrollTo({top:0,behavior:'smooth'});
 }
 
 // Form submit
