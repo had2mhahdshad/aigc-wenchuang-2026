@@ -161,6 +161,16 @@ tr:hover td{background:var(--surface-2)}
 .score-total-box .stb-label{font-size:13px;font-weight:600;color:var(--text-secondary)}
 .score-total-box .stb-value{font-size:32px;font-weight:800;color:var(--primary)}
 .score-total-box .stb-max{font-size:14px;color:var(--text-muted);font-weight:500}
+.rank-box{margin:0 0 20px;padding:16px 20px;background:linear-gradient(135deg,#eff6ff,#f0f9ff);border-radius:var(--radius);border:1px solid #dbeafe;display:flex;align-items:center;gap:14px}
+.rank-box .rb-icon{width:42px;height:42px;border-radius:10px;background:#dbeafe;color:#2563eb;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.rank-box .rb-content{flex:1}
+.rank-box .rb-label{font-size:12px;color:var(--text-secondary);font-weight:600;margin-bottom:2px}
+.rank-box .rb-value{font-size:16px;font-weight:700;color:#2563eb}
+.rank-box .rb-value .rank-num{font-size:24px;font-weight:800}
+.rank-box .rb-sub{font-size:12px;color:var(--text-muted);margin-top:2px}
+.rank-box.pending .rb-icon{background:#fffbeb;color:#d97706}
+.rank-box.pending .rb-value{color:#d97706}
+.rank-box.pending{background:linear-gradient(135deg,#fffbeb,#fffbeb);border-color:#fde68a}
 .comment-wrap{margin-top:20px}
 .comment-wrap label{display:block;font-size:13px;font-weight:600;margin-bottom:8px}
 .comment-wrap textarea{width:100%;min-height:80px;padding:12px;border:1px solid var(--border);border-radius:var(--radius);font-size:13px;resize:vertical;font-family:inherit;transition:.2s}
@@ -305,6 +315,7 @@ tr:hover td{background:var(--surface-2)}
       <h4>评分已提交</h4>
       <p>该作品评分已成功保存</p>
       <div class="score-display" id="modalScore">--</div>
+      <div id="modalRank" style="font-size:14px;color:var(--text-secondary);margin-bottom:24px"></div>
       <button class="btn btn-primary" style="width:100%;height:42px;font-size:14px" onclick="closeScoreModal()">继续评审</button>
     </div>
   </div>
@@ -700,6 +711,24 @@ function renderScoring(){
   html += '<div><span class="stb-value" id="totalScore">'+total.toFixed(1)+'</span><span class="stb-max"> / '+COMPETITION.totalMax+'</span></div>';
   html += '</div>';
 
+  // Ranking
+  var rankInfo = calculateRanking(workId, total);
+  var rankClass = rankInfo.total > 0 ? '' : 'pending';
+  var rankIcon = rankInfo.total > 0 ? '🏆' : '⏳';
+  html += '<div class="rank-box '+rankClass+'" id="rankBox">';
+  html += '<div class="rb-icon">'+rankIcon+'</div>';
+  html += '<div class="rb-content">';
+  html += '<div class="rb-label">当前排名</div>';
+  if(rankInfo.total > 0){
+    html += '<div class="rb-value">第 <span class="rank-num" id="rankNum">'+rankInfo.rank+'</span> 名 / 共 '+rankInfo.total+' 件已评作品</div>';
+    html += '<div class="rb-sub" id="rankSub">分数 '+total.toFixed(1)+' 分'+(rankInfo.tied > 1 ? '（与 '+rankInfo.tied+' 件作品并列）' : '')+'</div>';
+  } else {
+    html += '<div class="rb-value" id="rankNum">暂无排名</div>';
+    html += '<div class="rb-sub" id="rankSub">提交评分后将显示排名，当前分数 '+total.toFixed(1)+' 分</div>';
+  }
+  html += '</div>';
+  html += '</div>';
+
   // Comment
   html += '<div class="comment-wrap">';
   html += '<label>评审意见</label>';
@@ -738,6 +767,60 @@ function updateScore(idx, val){
   var total = state.tempScores.reduce(function(a,b){ return a + (parseFloat(b)||0); }, 0);
   var totalEl = document.getElementById('totalScore');
   if(totalEl) totalEl.textContent = total.toFixed(1);
+  // Update ranking
+  updateRankingDisplay(state.scoringWorkId, total);
+}
+
+// ===== Ranking =====
+function calculateRanking(workId, currentTotal){
+  // Collect all scored works' totals
+  var scoreList = [];
+  Object.keys(state.scores).forEach(function(wid){
+    if(wid !== workId){
+      scoreList.push({ id: wid, total: state.scores[wid].total });
+    }
+  });
+  // Add current work's temp total
+  if(currentTotal > 0){
+    scoreList.push({ id: workId, total: currentTotal });
+  }
+  // Sort descending
+  scoreList.sort(function(a,b){ return b.total - a.total; });
+  var total = scoreList.length;
+  if(total === 0) return { rank: 0, total: 0, tied: 0 };
+
+  // Find rank of current work (handle ties)
+  var rank = 0, tied = 0;
+  for(var i = 0; i < scoreList.length; i++){
+    if(scoreList[i].total === currentTotal){
+      if(rank === 0) rank = i + 1; // first occurrence
+      tied++;
+    }
+  }
+  if(rank === 0) rank = scoreList.length; // shouldn't happen but fallback
+  return { rank: rank, total: total, tied: tied };
+}
+
+function updateRankingDisplay(workId, currentTotal){
+  var rankInfo = calculateRanking(workId, currentTotal);
+  var rankBox = document.getElementById('rankBox');
+  if(!rankBox) return;
+
+  if(rankInfo.total > 0){
+    rankBox.className = 'rank-box';
+    rankBox.querySelector('.rb-icon').textContent = '🏆';
+    var valEl = rankBox.querySelector('.rb-value');
+    var subEl = rankBox.querySelector('.rb-sub');
+    if(valEl) valEl.innerHTML = '第 <span class="rank-num" id="rankNum">'+rankInfo.rank+'</span> 名 / 共 '+rankInfo.total+' 件已评作品';
+    if(subEl) subEl.textContent = '分数 '+currentTotal.toFixed(1)+' 分'+(rankInfo.tied > 1 ? '（与 '+rankInfo.tied+' 件作品并列）' : '');
+  } else {
+    rankBox.className = 'rank-box pending';
+    rankBox.querySelector('.rb-icon').textContent = '⏳';
+    var valEl2 = rankBox.querySelector('.rb-value');
+    var subEl2 = rankBox.querySelector('.rb-sub');
+    if(valEl2) valEl2.innerHTML = '暂无排名';
+    if(subEl2) subEl2.textContent = '提交评分后将显示排名，当前分数 '+currentTotal.toFixed(1)+' 分';
+  }
 }
 
 function submitScore(){
@@ -760,8 +843,17 @@ function submitScore(){
     comment: state.tempComment
   };
 
+  // Calculate ranking after save
+  var rankInfo = calculateRanking(workId, total);
+
   // Show success modal
   document.getElementById('modalScore').textContent = total.toFixed(1) + ' 分';
+  var rankEl = document.getElementById('modalRank');
+  if(rankInfo.total > 0){
+    rankEl.innerHTML = '当前排名：第 <strong style="color:#2563eb;font-size:18px">'+rankInfo.rank+'</strong> 名 / 共 '+rankInfo.total+' 件已评作品' + (rankInfo.tied > 1 ? '（与 '+rankInfo.tied+' 件并列）' : '');
+  } else {
+    rankEl.textContent = '';
+  }
   document.getElementById('scoreModal').classList.add('show');
 }
 
